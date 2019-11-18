@@ -27,7 +27,7 @@
   <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
   <script type="module">
     import Vue, { ref, watch } from "./vue.js";
-    import usePdf from "./usePdf.js";
+    import usePdf from "./hooks.js";
     import { VueDraggableResizable, Editable } from "./components.js";
 
     const app = new Vue({
@@ -38,7 +38,7 @@
       },
       setup() {
         const canvas = ref(null);
-        const url = ref("./Information new tenants.pdf");
+        const url = ref("/assets/demo.pdf");
         const { loaded, error } = usePdf(url, canvas);
         const texts = ref([]);
         return {
