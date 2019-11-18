@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/vue-draggable-resizable@2.0.1/dist/VueDraggableResizable.css"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <nav>
+        <select>
+          <option>Text</option>
+        </select>
+        <input type="url" v-model="url" />
+      </nav>
+      <main @focus="action" tabindex="0">
+        <canvas ref="canvas"></canvas>
+        <vue-draggable-resizable :parent="true" v-for="t in texts" :key="t">
+          <editable content="Lorem papouille..."></editable>
+        </vue-draggable-resizable>
+      </main>
+    </div>
+  </body>
+
+  <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+  <script type="module">
+    import Vue, { ref, watch } from "./vue.js";
+    import usePdf from "./usePdf.js";
+    import { VueDraggableResizable, Editable } from "./components.js";
+
+    const app = new Vue({
+      el: "#app",
+      components: {
+        VueDraggableResizable,
+        Editable
+      },
+      setup() {
+        const canvas = ref(null);
+        const url = ref("./Information new tenants.pdf");
+        const { loaded, error } = usePdf(url, canvas);
+        const texts = ref([]);
+        return {
+          url,
+          canvas,
+          texts,
+          action: () => texts.value.push(texts.value.length)
+        };
+      }
+    });
+  </script>
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+
+    #app {
+      display: grid;
+      height: 100%;
+      background: rgb(49, 49, 49);
+      overflow: hidden;
+      justify-content: center;
+      width: 100%;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+    }
+
+    main {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      height: 100%;
+      width: 100%;
+    }
+
+    .vdr:not(:hover) {
+      border: 1px dashed transparent;
+    }
+
+    @media print {
+      @page {
+        margin: 0;
+      }
+      nav {
+        display: none;
+      }
+    }
+  </style>
+</html>
